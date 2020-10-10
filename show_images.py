@@ -35,36 +35,3 @@ def stackImages(scale, imgArray):
     return ver
 
 
-def getContours(img,imgContour):
-    retrieval_mod = cv2.RETR_EXTERNAL
-    contours, hierarchy = cv2.findContours(img, retrieval_mod, cv2.CHAIN_APPROX_NONE)
-
-
-    x_arr = []
-    for cnt in contours:
-        area = cv2.contourArea(cnt)
-        if area >1000:
-            cv2.drawContours(imgContour, cnt, -1, (0,255, 100),10)
-#========== to get the number of corners in each shape to detect the type of the detected shape =======================
-            closed = True
-            resolution = 0.02
-            curveLength = cv2.arcLength(cnt, closed)
-            approx_corner_points = cv2.approxPolyDP(cnt, resolution * curveLength, closed)
-            Num_objCorners = len(approx_corner_points)
-            x, y, w, h = cv2.boundingRect(approx_corner_points)
-            print(x, y, w, h )
-            x_arr.append(x)
-
-            if Num_objCorners >2 and Num_objCorners <7:
-                cv2.rectangle(imgContour, (x, y), (x + w, y + h), (200, 100, 255), 7)
-            # objectType = 'gate'
-
-
-
-            # cv2.rectangle(imgContour, (x, y), (x + w, y + h), (200, 100, 255), 7)
-            # cv2.putText(imgContour, objectType,
-            #             (x + (w // 2)-10 , y + (h // 2) ), cv2.FONT_HERSHEY_COMPLEX, 2,
-            #             (0, 0, 0), 5)
-
-
-    print(min(x_arr))
